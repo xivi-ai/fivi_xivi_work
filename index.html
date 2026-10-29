@@ -3,223 +3,282 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FIVI — Verification layer for AI credit decisions</title>
-<meta name="description" content="FIVI is an intelligent verification layer for lenders that evaluates live AI-generated credit, AML and risk scores against preset error tolerances, without access to the underlying model or additional data.">
-<meta property="og:title" content="FIVI — Verification layer for AI credit decisions">
-<meta property="og:description" content="Cleared, Abstain or Flagged: a per-decision verdict on whether to trust the score today.">
-<style>
-:root{
-  --bg:#0b1020; --bg2:#121936; --card:#151d3d; --line:#26305c;
-  --text:#e8ecff; --muted:#9aa6d6; --accent:#5b8cff; --accent2:#34d3a0;
-  --warn:#f5b84b; --bad:#ff6b7a;
-}
-@media (prefers-color-scheme: light){
-  :root{--bg:#f6f8ff; --bg2:#eaefff; --card:#fff; --line:#d7defa; --text:#101734; --muted:#4b5688;
-        --accent:#2f5fe0; --accent2:#0e9f76; --warn:#b37400; --bad:#d63a4d;}
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-a{color:var(--accent)}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav{display:flex;align-items:center;justify-content:space-between;height:60px}
-.logo{font-weight:800;letter-spacing:.12em;text-decoration:none;color:var(--text)}
-.logo span{color:var(--accent)}
-nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0}
-nav ul a{color:var(--muted);text-decoration:none;font-size:14px}
-nav ul a:hover{color:var(--text)}
-@media(max-width:720px){nav ul{display:none}}
-.hero{padding:84px 0 64px;background:radial-gradient(900px 400px at 80% -10%,color-mix(in srgb,var(--accent) 25%,transparent),transparent)}
-.eyebrow{color:var(--accent2);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-h1{font-size:clamp(34px,5.5vw,58px);line-height:1.1;margin:14px 0 18px;letter-spacing:-.02em}
-.lead{font-size:19px;color:var(--muted);max-width:720px}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-.btn{display:inline-block;padding:12px 20px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--text)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-section{padding:64px 0;border-top:1px solid var(--line)}
-section.alt{background:var(--bg2)}
-h2{font-size:clamp(26px,3.5vw,36px);margin:0 0 12px;letter-spacing:-.01em}
-.sub{color:var(--muted);max-width:760px;margin:0 0 32px}
-.grid{display:grid;gap:16px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-.card h3{margin:0 0 8px;font-size:18px}
-.card p{margin:0;color:var(--muted);font-size:15px}
-.stat{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--accent)}
-.stat small{display:block;font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:4px;line-height:1.4}
-.verdict{border-left:4px solid var(--accent2)}
-.verdict.abstain{border-color:var(--warn)}
-.verdict.flagged{border-color:var(--bad)}
-.verdict h3{font-size:22px}
-.pill{display:inline-block;font-size:12px;padding:2px 10px;border:1px solid var(--line);border-radius:99px;color:var(--muted);margin:4px 6px 0 0}
-table{width:100%;border-collapse:collapse;font-size:15px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
-tr:last-child td{border-bottom:0}
-.yes{color:var(--accent2);font-weight:600}
-.tbl{overflow-x:auto}
-.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-.steps li::before{content:"0" counter(s);display:block;color:var(--accent);font-weight:800;margin-bottom:6px}
-.steps b{display:block;margin-bottom:4px}
-.steps span{color:var(--muted);font-size:15px}
-footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-</style>
+<title>FIVI — The reliability layer for AI-driven financial decisions</title>
+<meta name="description" content="FIVI sits beside your existing credit, AML or risk model, checks whether each score holds within your risk limits, and returns Cleared, Abstain or Flagged with a clear reason code.">
+<meta property="og:title" content="FIVI — The reliability layer for AI-driven financial decisions">
+<meta property="og:description" content="A model's score is an input, not a decision. FIVI verifies every live decision against your error limits.">
+<link rel="icon" href="assets/fivi-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
+
 <header>
-  <div class="wrap">
-    <nav>
-      <a class="logo" href="#top">FI<span>VI</span></a>
-      <ul>
-        <li><a href="#problem">Problem</a></li>
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#evidence">Evidence</a></li>
-        <li><a href="#compliance">Compliance</a></li>
-        <li><a href="#pilot">Pilot</a></li>
-        <li><a href="#team">Team</a></li>
-      </ul>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="FIVI home">
+      <img src="assets/fivi-mark.svg" alt="">
+      <b>FIVI</b><span>by Xivi Innovations</span>
+    </a>
+    <nav class="links">
+      <a href="#problem">Problem</a>
+      <a href="#solution">Solution</a>
+      <a href="#technology">Technology</a>
+      <a href="#integration">Integration</a>
+      <a href="#traction">Traction</a>
+      <a href="#pilot">Pilot</a>
+      <a href="#team">Team</a>
+      <a class="btn primary sm" href="#contact">Request a pilot</a>
     </nav>
   </div>
 </header>
 
 <main id="top">
-<div class="hero">
+
+<section class="hero">
   <div class="wrap">
-    <div class="eyebrow">AI-powered trust, fraud &amp; identity</div>
-    <h1>Know when to trust the score &mdash; on every live decision.</h1>
-    <p class="lead">FIVI is an intelligent verification layer for lenders. It evaluates live AI-generated credit, AML and risk scores against preset error tolerances, without access to the underlying model and without needing additional data.</p>
-    <div class="cta">
-      <a class="btn primary" href="#pilot">Run a 12-week shadow pilot</a>
-      <a class="btn" href="#how">See how it works</a>
+    <div>
+      <p class="eyebrow">Reliability layer for AI-driven finance</p>
+      <h1>Verify every AI score before it becomes a decision.</h1>
+      <p class="lead">A model's score is an input, not a decision. FIVI runs beside your existing credit, AML or risk model and returns Cleared, Abstain or Flagged for each live decision, with a reason code and an audit record.</p>
+      <div class="cta">
+        <a class="btn primary" href="#contact">Request a pilot</a>
+        <a class="btn" href="#solution">See how it works</a>
+      </div>
+      <div class="assure">
+        <span>Measured error limits</span>
+        <span>Built for regulated lenders</span>
+        <span>Zero model changes</span>
+      </div>
+      <p class="founders">Founded by Chinmaya Naik and Abhinav Navneet · <a href="#team">Meet the team</a></p>
+    </div>
+
+    <div class="panel" aria-label="Example FIVI verdict screen">
+      <div class="pbar"><span class="dot live"></span>Shadow mode<span class="pbar-r">Read-only</span></div>
+      <div class="pflow">
+        <span>Your model</span><i>→</i><span class="core">FIVI</span><i>→</i><span>Decision</span>
+      </div>
+      <div class="pcase">
+        <div><small>Application</small><b>Two-wheeler loan · #A-20418</b></div>
+        <div><small>Model score</small><b>0.71</b></div>
+      </div>
+      <div class="pverdict">
+        <small>FIVI verdict</small>
+        <div class="vrow"><span class="chip warn big">Abstain</span><span class="rc">Covariate drift</span></div>
+        <p>Income-linked inputs have shifted past their calibrated limit.</p>
+      </div>
+      <div class="meter">
+        <div class="mrow"><small>Drift vs. limit</small><small>Elevated</small></div>
+        <div class="track"><div class="fill"></div><div class="lim"></div></div>
+      </div>
+      <dl class="record">
+        <dt>Action</dt><dd>Routed to a credit officer</dd>
+        <dt>Audit</dt><dd><code>SHA-256 · 3bfb01d7…</code></dd>
+      </dl>
+      <p class="note">Illustrative example. Policy, thresholds and error limits are set by each lender.</p>
+    </div>
+  </div>
+</section>
+
+<div class="proof" aria-label="Validation and regulatory alignment">
+  <div class="wrap">
+    <div class="prow">
+      <span class="plabel">Tested offline on</span>
+      <div class="pitems"><span>LendingClub</span><span>NSSO AIDIS</span><span>UCI Credit</span><span>Elliptic</span><span>Binance UST</span></div>
+    </div>
+    <div class="prow">
+      <span class="plabel">Aligned with</span>
+      <div class="pitems reg"><span>RBI FREE-AI</span><span>DPDP Act 2023</span><span>RBI IT Outsourcing (NBFCs)</span></div>
     </div>
   </div>
 </div>
 
-<section id="problem">
+<section id="problem" class="tint">
   <div class="wrap">
-    <h2>Credit models drift. Silently.</h2>
-    <p class="sub">AI credit models trained on historical data degrade without alert when borrower cash flows or economic conditions change. Because output scores are presumed confident, models unknowingly approve bad loans or reject good borrowers long before post-hoc monitoring detects drift.</p>
+    <p class="eyebrow">The problem</p>
+    <h2>AI can score a borrower. But what happens when the world changes?</h2>
+    <p class="sec-intro">Credit models are built on past data. When borrower cash flows or economic conditions shift, a model's real error rate climbs silently while its scores still look confident.</p>
     <div class="grid g3">
-      <div class="card"><div class="stat">17.4% &rarr; 23.3%<small>Defaults on resolved LendingClub loans, 2013-14 to 2016: a 34% increase under a fixed approval threshold, with no internal model alert.</small></div></div>
-      <div class="card"><div class="stat">9.9 crore<small>Digital personal loans sanctioned in India, April&ndash;December 2025. High-speed automation compounds silent drift.</small></div></div>
-      <div class="card"><div class="stat">34+ crore<small>Account Aggregator consents fulfilled, feeding fast-moving regional and seasonal data shifts into underwriting.</small></div></div>
+      <div class="card">
+        <div class="num">17.4%<span class="to">→</span>23.3%</div>
+        <p class="cap">Default rate on LendingClub consumer loans, 2013–14 vs. 2016. As the borrower mix changed, defaults rose 34% under the same approval cut-off, and nothing inside the model flagged it.</p>
+      </div>
+      <div class="card">
+        <div class="num">9.9 crore</div>
+        <p class="cap">Digital personal loans sanctioned in India, April–December 2025. High-speed automated lending means silent drift compounds fast.</p>
+      </div>
+      <div class="card">
+        <div class="num">34+ crore</div>
+        <p class="cap">Account Aggregator consents fulfilled. Richer cash-flow data brings faster regional and seasonal shifts.</p>
+      </div>
     </div>
+    <p class="src">Sources: FIVI LendingClub benchmark on resolved historical loans; The Economic Times; Sahamati (Dec 2025).</p>
   </div>
 </section>
 
-<section id="how" class="alt">
+<section id="gap">
   <div class="wrap">
-    <h2>A read-only control gate for your existing models</h2>
-    <p class="sub">FIVI is a stateless, plug-and-play verification engine deployed read-only inside the lender's domestic cloud. It runs alongside your models, checks their inputs, labels and scores, and returns one of three verdicts.</p>
-    <div class="grid g3">
-      <div class="card verdict"><h3>Cleared</h3><p>The prediction is within tolerance. Automate the decision.</p></div>
-      <div class="card verdict abstain"><h3>Abstain</h3><p>Too uncertain to automate. Route the case to a credit officer.</p></div>
-      <div class="card verdict flagged"><h3>Flagged</h3><p>Escalate. Something material has shifted.</p></div>
-    </div>
-    <p class="sub" style="margin-top:24px">Every verdict carries a diagnostic reason code and a SHA-256 hash-chained audit record.
-      <br><span class="pill">band uncertainty</span><span class="pill">covariate drift</span><span class="pill">sparse subgroup</span><span class="pill">threshold conflict</span></p>
-
-    <h2 style="margin-top:48px;font-size:26px">Five verification checks, one cash-flow model</h2>
-    <p class="sub">Unified around a proprietary household cash-flow simulation.</p>
-    <ol class="steps">
-      <li><b>Split-conformal calibration</b><span>Finite-sample error bounds on each live decision.</span></li>
-      <li><b>Distributionally robust drift gating</b><span>Detects shifts in borrower mix before losses do.</span></li>
-      <li><b>Offline audit subgroup correction</b><span>Corrects for hidden subgroup error with a small audit sample, no sensitive inputs at origination.</span></li>
-      <li><b>Noise-adjusted multi-feature filtering</b><span>Separates real signal from noisy inputs.</span></li>
-      <li><b>Latching circuit breaker</b><span>If drift in any subgroup breaches a hard tolerance, automation halts until a named risk officer recertifies the workflow.</span></li>
-    </ol>
-  </div>
-</section>
-
-<section id="difference">
-  <div class="wrap">
-    <h2>The only system that enforces error bounds per decision</h2>
-    <p class="sub">Credit engines score. Dashboards observe. Governance suites review periodically. None tells you whether to trust the score today.</p>
-    <div class="tbl">
-      <table>
-        <thead><tr><th>Category</th><th>Examples</th><th>Gap</th></tr></thead>
-        <tbody>
-          <tr><td>Credit engines / scoring</td><td>L&amp;T Finance Project Cyclops, FICO, Zest AI</td><td>Automate decisions but do not verify that error limits still hold on live decisions.</td></tr>
-          <tr><td>Observability platforms</td><td>Fiddler AI, Arize</td><td>Surface drift on dashboards only after losses occur.</td></tr>
-          <tr><td>Governance suites</td><td>IBM OpenPages</td><td>Rely on periodic reviews rather than gating each live decision.</td></tr>
-          <tr><td><b>FIVI</b></td><td>Verification layer</td><td class="yes">Per-decision verdict with finite-sample error bounds; halts automation when worst-subgroup drift spikes.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section id="evidence" class="alt">
-  <div class="wrap">
-    <h2>Validated at TRL 4</h2>
-    <p class="sub">68 automated verification tests and five retrospective benchmarks on real data.</p>
-    <div class="grid g2">
-      <div class="card"><h3>Indian household credit</h3>
-        <p>NSSO AIDIS, 170,000 records. Standard economic grouping missed a 15.1% false-negative exclusion rate for creditworthy Scheduled Caste households (vs. an 11.3% baseline). A small offline audit sample cut it to 8.8%, with zero caste inputs at origination and a 5.9-point increase in officer referrals.</p></div>
-      <div class="card"><h3>Credit-cycle drift</h3>
-        <p>LendingClub, 2013&ndash;16. Held two-sided error bounds (11.3% missed defaults, 18.6% false alarms) through a 34% default spike on a weak scorecard (AUC 0.66) by referring 56.4% of cases to officers.</p></div>
-      <div class="card"><h3>Fair lending</h3>
-        <p>UCI Credit, 30,000 accounts. Equalized missed-default rates across sexes (9.8% vs. 9.8%) with gender withheld.</p></div>
-      <div class="card"><h3>AML &amp; liquidity monitoring</h3>
-        <p>Raised post-shift AML detection AUC from 0.48 to 0.84 on 203,769 Elliptic Bitcoin transactions, capping missed illicit flow at 7.5%. Flagged the 2022 UST stablecoin collapse 44 hours in advance with zero BUSD false alarms.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="compliance">
-  <div class="wrap">
-    <h2>Built for Indian regulation</h2>
-    <p class="sub">FIVI turns the RBI's August 2025 FREE-AI framework into enforceable technical controls.</p>
+    <p class="eyebrow">The control gap</p>
+    <h2>Four kinds of systems touch each decision. None checks whether to trust the score today.</h2>
     <div class="grid g4">
-      <div class="card"><h3>People first</h3><p>Uncertain cases route to human underwriters.</p></div>
-      <div class="card"><h3>Understandability</h3><p>Explicit diagnostic reason codes on every verdict.</p></div>
-      <div class="card"><h3>Accountability</h3><p>SHA-256-verifiable, hash-chained audit logs.</p></div>
-      <div class="card"><h3>Data minimization</h3><p>Read-only, in the lender's domestic cloud, with no additional borrower PII. Aligned with DPDP Act 2023 s.6(1) and RBI IT Outsourcing Directions for NBFCs (para 74(vi)).</p></div>
+      <div class="card"><h3>Scoring engines</h3><p>Produce a score without checking whether error limits still hold today.</p></div>
+      <div class="card"><h3>Model monitoring</h3><p>Alert a team after the fact while live applications keep flowing.</p></div>
+      <div class="card"><h3>AML alerting</h3><p>Sends every alert into a manual review queue.</p></div>
+      <div class="card"><h3>Model governance</h3><p>Reviews models periodically instead of checking live decisions.</p></div>
     </div>
-    <p class="sub" style="margin-top:24px">Provisional patent filed on the system-level detection architecture. We are also designing secure-enclave execution with zero-knowledge proofs so regulators can verify error bounds without inspecting proprietary parameters.</p>
+    <p class="sec-intro" style="margin-top:32px"><b>FIVI adds the missing step:</b> a live, per-decision verdict with a reason code, using only the scores and inputs you already have, with no access to the model's internals.</p>
   </div>
 </section>
 
-<section id="pilot" class="alt">
+<section id="solution" class="tint">
   <div class="wrap">
-    <h2>Start with a 12-week shadow pilot</h2>
-    <p class="sub">Our shadow API connector is built and ready. We start with NBFCs in two-wheeler, farm-equipment, rural and MSME lending, with a structured proof-of-concept that ends in a model-risk validation dossier for your risk committee.</p>
-    <div class="grid g3">
-      <div class="card"><h3>1. Shadow PoC</h3><p>12 weeks, read-only, alongside your live models. No change to decisions.</p></div>
-      <div class="card"><h3>2. Workflow license</h3><p>Annual per-workflow license once the pilot proves out.</p></div>
-      <div class="card"><h3>3. Enterprise agreement</h3><p>Multi-portfolio coverage across your lending book.</p></div>
+    <p class="eyebrow">The solution</p>
+    <h2>A verified verdict for every decision.</h2>
+    <p class="sec-intro">Your scoring engine asks, “Should this applicant be approved?” FIVI asks the control question: “Can we trust this score today, within our stated error limit?”</p>
+    <div class="grid g3" style="margin-top:36px">
+      <div class="vc ok"><h3>Cleared</h3><p>The score holds within its calibrated error limit. Automate the decision.</p></div>
+      <div class="vc warn"><h3>Abstain</h3><p>Uncertainty or input drift is too high. Route the case to a credit officer.</p></div>
+      <div class="vc bad"><h3>Flagged</h3><p>A hard risk limit has been breached. Escalate for immediate review.</p></div>
     </div>
-    <div class="cta"><a class="btn primary" href="mailto:hello@xivi.work?subject=FIVI%20shadow%20pilot">Talk to us</a></div>
+    <div class="codes"><span>Every Abstain or Flagged verdict carries a reason code:</span>
+      <span class="t">Band uncertainty</span><span class="t">Covariate drift</span><span class="t">Sparse subgroup</span><span class="t">Threshold conflict</span></div>
+
+    <ol class="steps">
+      <li><b>Receive</b><span>Reads the score and inputs your model already uses.</span></li>
+      <li><b>Check uncertainty</b><span>Tests whether the score sits inside its calibrated error margin.</span></li>
+      <li><b>Check drift</b><span>Tests whether borrower inputs have shifted from the baseline, including within subgroups.</span></li>
+      <li><b>Decide and record</b><span>Applies your policy, then writes a signed, tamper-evident audit record.</span></li>
+    </ol>
+
+    <div class="callout">
+      <div>
+        <h3>A breach latches. Only a named risk officer can reset it.</h3>
+        <div class="state"><span>Normal</span><span>Elevated drift</span><span>Latched lockout</span></div>
+      </div>
+      <p>Dashboards tell you something has changed. The circuit breaker controls what the lending system is allowed to do next. Automation resumes only when an authorised risk officer recertifies the workflow, and a calmer overall average never restarts it on its own.</p>
+    </div>
+  </div>
+</section>
+
+<section id="technology" class="dark">
+  <div class="wrap">
+    <p class="eyebrow">Proprietary core</p>
+    <h2>Published science, combined into something that can't be copied from a paper.</h2>
+    <p class="sec-intro">Each underlying statistical method is peer-reviewed and public. FIVI's invention is how they are fused into one guarantee, calibrated against borrower cash flows, and sealed against tampering.</p>
+    <div class="grid g3">
+      <div class="dcard"><span class="k">01</span><h3>One unified limit</h3><p>Uncertainty, drift, subgroup and noise checks are integrated into a single pre-set cap on costly errors: bad loans approved, creditworthy borrowers turned away, or illicit flows missed. FIVI automates inside calibrated bounds and abstains outside them.</p></div>
+      <div class="dcard"><span class="k">02</span><h3>Tuned on a cash-flow simulation</h3><p>Calibrated against a proprietary structural model of household cash flows and debt service. It is held as a trade secret and is not disclosed in any paper or patent.</p></div>
+      <div class="dcard"><span class="k">03</span><h3>Sealed, verifiable records</h3><p>Every verdict is cryptographically signed and reproducible, so a supervisor can verify it independently.</p></div>
+    </div>
+    <div class="defend">
+      <div><b>Provisional patent filed</b><span>Covers the system-level detection architecture.</span></div>
+      <div><b>Trade-secret core</b><span>The cash-flow simulation and calibration parameters stay undisclosed.</span></div>
+      <div><b>Secure-enclave execution <em>in design</em></b><span>Zero-knowledge proofs would let regulators verify error bounds without seeing proprietary internals.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="integration">
+  <div class="wrap">
+    <p class="eyebrow">Integration &amp; data</p>
+    <h2>Reads the data you already hold. Never writes back.</h2>
+    <p class="sec-intro">FIVI runs in shadow mode inside your own cloud: it reads a copy of your model's output and inputs, checks reliability in parallel, and leaves your live lending system untouched.</p>
+    <div class="split">
+      <div class="card"><h3>What FIVI reads</h3>
+        <ul class="list yes">
+          <li>Your model's score or output</li>
+          <li>The input features the model already uses</li>
+          <li>A historical calibration sample and a small set of audit labels</li>
+        </ul>
+      </div>
+      <div class="card"><h3>What FIVI never needs</h3>
+        <ul class="list no">
+          <li>Model weights, source code or retraining</li>
+          <li>Demographic or caste data at loan origination</li>
+          <li>Stored customer PII</li>
+          <li>Write access to lending ledgers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card"><h3>Built for RBI FREE-AI</h3><p>People first: uncertain cases go to a person. Understandable: every verdict has a reason code. Accountable: every decision has an immutable log.</p></div>
+      <div class="card"><h3>Data minimisation</h3><p>Supports the DPDP Act 2023 (s. 6(1)) principle of using only what is necessary. FIVI requires zero new borrower data.</p></div>
+      <div class="card"><h3>Data stays in India</h3><p>Runs entirely inside the lender's domestic cloud, supporting RBI IT outsourcing rules for NBFCs.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="traction" class="tint">
+  <div class="wrap">
+    <p class="eyebrow">Traction</p>
+    <h2>Tested offline on five real-world datasets.</h2>
+    <p class="sec-intro">Evaluated on public credit, household survey, AML and market data, showing both that the error bounds held and what the review cost was.</p>
+    <div class="ds">
+      <div class="dsr"><div><b>LendingClub</b><small>US consumer credit · 2013–2016</small></div>
+        <p>Error limits held through a real credit-cycle shift, with defaults rising 34%, by referring uncertain cases to officers.</p></div>
+      <div class="dsr"><div><b>NSSO AIDIS</b><small>India household survey · 170,000 households</small></div>
+        <p>Found a group that standard economic grouping missed, and closed the gap using a small offline audit, with no sensitive attribute used at origination.</p></div>
+      <div class="dsr"><div><b>UCI Credit</b><small>Taiwan · 30,000 card accounts</small></div>
+        <p>Missed-default rates stayed level across male and female groups with sex withheld from the model.</p></div>
+      <div class="dsr"><div><b>Elliptic</b><small>On-chain AML · 203,769 Bitcoin transactions</small></div>
+        <p>Kept AML detection working after a market shift, lifting detection AUC from 0.48 to 0.84.</p></div>
+      <div class="dsr"><div><b>Binance UST</b><small>2022 stablecoin collapse · price data</small></div>
+        <p>Gave 44 hours of early warning before the peg broke, with no false alarms on the BUSD benchmark.</p></div>
+    </div>
+    <p class="src">Offline benchmarks on public and survey data. Sources: LendingClub; NSSO AIDIS; Yeh &amp; Lien (2009), UCI; Weber et al. (2019), Elliptic; Binance market data.</p>
+  </div>
+</section>
+
+<section id="pilot" class="dark">
+  <div class="wrap">
+    <p class="eyebrow">Get started</p>
+    <h2>A 12-week, read-only shadow pilot on your own lending data.</h2>
+    <p class="sec-intro">We start with mid- and upper-layer NBFCs running automated credit models in two-wheeler, farm-equipment, rural and MSME lending. Your live decisions are never touched.</p>
+    <div class="tl">
+      <div><small>Weeks 1–4</small><b>Deploy &amp; scope</b><span>Cloud setup, data schema, read-only access and risk tolerances.</span></div>
+      <div><small>Weeks 5–8</small><b>Calibrate &amp; profile</b><span>Baseline performance, error margins and drift thresholds on past data.</span></div>
+      <div><small>Weeks 9–10</small><b>Shadow run</b><span>Run in parallel with live traffic and measure verdicts and referral rates.</span></div>
+      <div><small>Weeks 11–12</small><b>Review</b><span>A model-risk validation dossier, audit logs and a rollout plan for your risk committee.</span></div>
+    </div>
   </div>
 </section>
 
 <section id="team">
   <div class="wrap">
-    <h2>Team</h2>
-    <p class="sub">Xivi Innovations Private Limited combines software product engineering, applied AI research and corporate finance, backed by veteran fintech advisors.</p>
+    <p class="eyebrow">Team</p>
+    <h2>Built by product, research and finance expertise.</h2>
     <div class="grid g3">
-      <div class="card"><h3>Chinmaya Naik</h3><p><b>Co-Founder &amp; CEO.</b> B.Tech in Computer Science. 7+ years building and managing technology products; prior associations with IBM and the Royal Academy of Engineering.</p></div>
-      <div class="card"><h3>Abhinav Navneet</h3><p><b>Co-Founder &amp; CTO.</b> Computer Science engineer, G H Raisoni College of Engineering, Nagpur. 5+ years in system architecture, applied research and IP development.</p></div>
-      <div class="card"><h3>Priyanka Harkare</h3><p><b>CFO.</b> Chartered Accountant and CFA Level I. 3+ years in institutional finance; previously KPMG and iB Hubs.</p></div>
-    </div>
-    <div class="grid g2" style="margin-top:16px">
-      <div class="card"><h3>Dr. Deep Modi</h3><p><b>Advisor.</b> FinTech mentor with 25+ years of financial-sector leadership.</p></div>
-      <div class="card"><h3>Harsh Trivedi</h3><p><b>Advisor.</b> Finance adviser, ACCA-qualified, Director at Prepper Gurukul; 8+ years of experience.</p></div>
+      <div class="card person"><div class="avatar">CN</div><h3>Chinmaya Naik</h3><div class="role">Co-Founder &amp; CEO</div>
+        <p>Computer Science engineer with 7+ years in product development and management.</p></div>
+      <div class="card person"><div class="avatar">AN</div><h3>Abhinav Navneet</h3><div class="role">Co-Founder &amp; CTO</div>
+        <p>Computer Science engineer with 5+ years in technology, research and intellectual property.</p></div>
+      <div class="card person"><div class="avatar">HT</div><h3>Harsh Trivedi</h3><div class="role">Adviser, Finance</div>
+        <p>ACCA graduate and Director at Prepper Gurukul, with 8+ years of experience.</p></div>
     </div>
   </div>
 </section>
+
+<section id="contact" class="tint contact">
+  <div class="wrap">
+    <p class="eyebrow">Contact</p>
+    <h2>Ready to test with a lender?</h2>
+    <p class="sec-intro">Tell us about your credit, AML or risk workflow and we will scope a read-only shadow evaluation.</p>
+    <div class="cta"><a class="btn primary" href="mailto:xivi.tech@gmail.com?subject=FIVI%20shadow%20pilot">xivi.tech@gmail.com</a></div>
+  </div>
+</section>
+
 </main>
 
 <footer>
   <div class="wrap">
-    <span>&copy; 2026 Xivi Innovations Private Limited. FIVI is at TRL 4; results are from retrospective benchmarks.</span>
-    <span>fivi.xivi.work</span>
+    <div class="logo">
+      <img src="assets/xivi-logo.png" alt="XIVI">
+      <p>© 2026 Xivi Innovations Private Limited. All rights reserved.</p>
+    </div>
+    <p><a href="privacy.html">Privacy policy</a> · fivi.xivi.work</p>
   </div>
 </footer>
+
 </body>
 </html>
