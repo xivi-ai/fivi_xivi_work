@@ -85,7 +85,7 @@
   <div class="wrap">
     <div class="prow">
       <span class="plabel">Tested offline on</span>
-      <div class="pitems"><span>LendingClub</span><span>NSSO AIDIS</span><span>UCI Credit</span><span>Elliptic</span><span>Binance UST</span></div>
+      <div class="pitems tested"><span>LendingClub</span><span>NSSO AIDIS</span><span>UCI Credit</span><span>Elliptic</span><span>Binance UST</span></div>
     </div>
     <div class="prow">
       <span class="plabel">Aligned with</span>
@@ -121,11 +121,11 @@
   <div class="wrap">
     <p class="eyebrow">The control gap</p>
     <h2>Four kinds of systems touch each decision. None checks whether to trust the score today.</h2>
-    <div class="grid g4">
-      <div class="card"><h3>Scoring engines</h3><p>Produce a score without checking whether error limits still hold today.</p></div>
-      <div class="card"><h3>Model monitoring</h3><p>Alert a team after the fact while live applications keep flowing.</p></div>
-      <div class="card"><h3>AML alerting</h3><p>Sends every alert into a manual review queue.</p></div>
-      <div class="card"><h3>Model governance</h3><p>Reviews models periodically instead of checking live decisions.</p></div>
+    <div class="cols c4">
+      <div><h3>Scoring engines</h3><p>Produce a score without checking whether error limits still hold today.</p></div>
+      <div><h3>Model monitoring</h3><p>Alert a team after the fact while live applications keep flowing.</p></div>
+      <div><h3>AML alerting</h3><p>Sends every alert into a manual review queue.</p></div>
+      <div><h3>Model governance</h3><p>Reviews models periodically instead of checking live decisions.</p></div>
     </div>
     <p class="sec-intro" style="margin-top:32px"><b>FIVI adds the missing step:</b> a live, per-decision verdict with a reason code, using only the scores and inputs you already have, with no access to the model's internals.</p>
   </div>
@@ -143,6 +143,26 @@
     </div>
     <div class="codes"><span>Every Abstain or Flagged verdict carries a reason code:</span>
       <span class="t">Band uncertainty</span><span class="t">Covariate drift</span><span class="t">Sparse subgroup</span><span class="t">Threshold conflict</span></div>
+
+    <div class="diagram" role="img" aria-label="Your model's score goes into the FIVI control layer, which returns Cleared to automate, Abstain to a credit officer, or Flagged to risk review.">
+      <div class="d-box">
+        <small>Input</small>
+        <b>Your existing model</b>
+        <span>Scores each application</span>
+      </div>
+      <div class="d-arrow" aria-hidden="true"></div>
+      <div class="d-box core">
+        <small>FIVI control layer</small>
+        <ul><li>Uncertainty check</li><li>Drift and subgroup check</li><li>Your policy rules</li></ul>
+        <div class="seal">Signed audit record · SHA-256</div>
+      </div>
+      <div class="d-arrow" aria-hidden="true"></div>
+      <div class="d-outs">
+        <div class="d-out ok"><b>Cleared</b><span>Automate the decision</span></div>
+        <div class="d-out warn"><b>Abstain</b><span>Credit officer reviews</span></div>
+        <div class="d-out bad"><b>Flagged</b><span>Risk review · breaker latches</span></div>
+      </div>
+    </div>
 
     <ol class="steps">
       <li><b>Receive</b><span>Reads the score and inputs your model already uses.</span></li>
@@ -201,10 +221,10 @@
         </ul>
       </div>
     </div>
-    <div class="grid g3" style="margin-top:20px">
-      <div class="card"><h3>Built for RBI FREE-AI</h3><p>People first: uncertain cases go to a person. Understandable: every verdict has a reason code. Accountable: every decision has an immutable log.</p></div>
-      <div class="card"><h3>Data minimisation</h3><p>Supports the DPDP Act 2023 (s. 6(1)) principle of using only what is necessary. FIVI requires zero new borrower data.</p></div>
-      <div class="card"><h3>Data stays in India</h3><p>Runs entirely inside the lender's domestic cloud, supporting RBI IT outsourcing rules for NBFCs.</p></div>
+    <div class="cols c3">
+      <div><h3>Built for RBI FREE-AI</h3><p>People first: uncertain cases go to a person. Understandable: every verdict has a reason code. Accountable: every decision has an immutable log.</p></div>
+      <div><h3>Data minimisation</h3><p>Supports the DPDP Act 2023 (s. 6(1)) principle of using only what is necessary. FIVI requires zero new borrower data.</p></div>
+      <div><h3>Data stays in India</h3><p>Runs entirely inside the lender's domestic cloud, supporting RBI IT outsourcing rules for NBFCs.</p></div>
     </div>
   </div>
 </section>
@@ -216,14 +236,19 @@
     <p class="sec-intro">Evaluated on public credit, household survey, AML and market data, showing both that the error bounds held and what the review cost was.</p>
     <div class="ds">
       <div class="dsr"><div><b>LendingClub</b><small>US consumer credit · 2013–2016</small></div>
+        <div class="st">+34%<small>default spike absorbed</small></div>
         <p>Error limits held through a real credit-cycle shift, with defaults rising 34%, by referring uncertain cases to officers.</p></div>
       <div class="dsr"><div><b>NSSO AIDIS</b><small>India household survey · 170,000 households</small></div>
+        <div class="st">15.1% → 8.8%<small>group exclusion gap</small></div>
         <p>Found a group that standard economic grouping missed, and closed the gap using a small offline audit, with no sensitive attribute used at origination.</p></div>
       <div class="dsr"><div><b>UCI Credit</b><small>Taiwan · 30,000 card accounts</small></div>
+        <div class="st">9.8% = 9.8%<small>missed defaults, both sexes</small></div>
         <p>Missed-default rates stayed level across male and female groups with sex withheld from the model.</p></div>
       <div class="dsr"><div><b>Elliptic</b><small>On-chain AML · 203,769 Bitcoin transactions</small></div>
+        <div class="st">0.48 → 0.84<small>detection AUC</small></div>
         <p>Kept AML detection working after a market shift, lifting detection AUC from 0.48 to 0.84.</p></div>
       <div class="dsr"><div><b>Binance UST</b><small>2022 stablecoin collapse · price data</small></div>
+        <div class="st">44 hrs<small>early warning</small></div>
         <p>Gave 44 hours of early warning before the peg broke, with no false alarms on the BUSD benchmark.</p></div>
     </div>
     <p class="src">Offline benchmarks on public and survey data. Sources: LendingClub; NSSO AIDIS; Yeh &amp; Lien (2009), UCI; Weber et al. (2019), Elliptic; Binance market data.</p>
