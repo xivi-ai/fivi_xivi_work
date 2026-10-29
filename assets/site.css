@@ -281,3 +281,9 @@ section.contact{padding:68px 0 72px}
 .defend.solo{margin-top:36px;border-top:0}
 .defend.solo div{padding:0 28px 0 0}
 .defend.solo b{font-size:18px;margin-bottom:6px}
+
+/* classes that replace former inline styles */
+.mt36{margin-top:36px}
+[hidden]{display:none !important}
+
+.legal .mt36{margin-top:36px}

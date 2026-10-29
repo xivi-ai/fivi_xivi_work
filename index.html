@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; manifest-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="color-scheme" content="only light">
 <title>FIVI — Verification layer for AI credit decisions | XIVI</title>
 <meta name="description" content="FIVI checks each live credit, AML or risk score against your error limits and returns Cleared, Abstain or Flagged with a reason code and audit record.">
@@ -60,7 +62,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css?v=7">
+<link rel="stylesheet" href="assets/site.css?v=9">
+<script src="assets/frame.js" defer></script>
 </head>
 <body>
 
@@ -172,7 +175,7 @@
       <div><h3>AML alerting</h3><p>Sends every alert to a manual review queue.</p></div>
       <div><h3>Model governance</h3><p>Reviews models periodically, not live decisions.</p></div>
     </div>
-    <p class="sec-intro" style="margin-top:36px">FIVI adds a check on each decision. It uses only the scores and inputs you already have and needs no access to the model's internals.</p>
+    <p class="sec-intro mt36">FIVI adds a check on each decision. It uses only the scores and inputs you already have and needs no access to the model's internals.</p>
   </div>
 </section>
 
@@ -181,7 +184,7 @@
     <p class="eyebrow">Solution</p>
     <h2>Three possible verdicts.</h2>
     <p class="sec-intro">For each decision, FIVI checks whether the score can be trusted today, within your stated error limit.</p>
-    <div class="grid g3" style="margin-top:36px">
+    <div class="grid g3 mt36">
       <div class="vc ok"><h3>Cleared</h3><p>The score is within its error limit. Automate the decision.</p></div>
       <div class="vc warn"><h3>Abstain</h3><p>Uncertainty is high or inputs have drifted. Send to a credit officer.</p></div>
       <div class="vc bad"><h3>Flagged</h3><p>A hard limit is breached. Escalate for review.</p></div>
